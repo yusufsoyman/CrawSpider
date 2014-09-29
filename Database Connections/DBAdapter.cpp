@@ -25,11 +25,13 @@
 #include <csignal>
 #include <cstdio>
 #include <vector>
+#include <list>
 #include <mysql/mysql.h>
 
 
 using std::string;
 using std::vector;
+using std::list;
 // using std::strtok;
 
 #include "DBAdapter.h"
@@ -296,7 +298,7 @@ bool DBAdapter::insertData(const string &fields, const string& values, const str
 		return true;
 	}*/
 }
-bool DBAdapter::selectData(const string &fields, const string& condition, const string &table, vector<string> &returnVal, int &errorCode, const char seperator) /*select data from specific tables
+bool DBAdapter::selectData(const string &fields, const string& condition, const string &table, vector< list< string > >  &returnVal, int &errorCode) /*select data from specific tables
 							Example usage:
 							selecttData("name, surname, age", "name='john' or age < 52", "users", errorCodeVar);
 							*/
@@ -315,31 +317,19 @@ bool DBAdapter::selectData(const string &fields, const string& condition, const 
 		/*int rowNum = mysql_num_rows(result);
 		returnVal = new unsigned char [rowNum]; //This should be deleted by the caller
 		*/
-		string temp;
+		list<string> templist;
+		
 		int fieldNum = mysql_num_fields(result);
 		while(row = mysql_fetch_row(result))
 		{
-			temp.clear();
+// 			temp.clear();
+			templist.clear();
 			for(int i = 0; i < fieldNum; i++)
 			{
-				if( i != fieldNum - 1)
-				{
-					if(temp.empty() == true)
-					{
-						temp = row[i];
-						temp += seperator;
-					}
-					else
-					{
-						temp += row[i] + seperator;
-					}
-				}
-				else
-				{
-					temp += row[i];
-				}
+				string temp = row[i];
+				templist.push_back(temp);
 			}
-			returnVal.push_back(temp);
+			returnVal.push_back(templist);
 		}
 	}
 	else
@@ -348,9 +338,9 @@ bool DBAdapter::selectData(const string &fields, const string& condition, const 
 		return true;
 	}
 }
-bool DBAdapter::selectData(const string &fields, const string &table, vector<string> &returnVal, int &errorCode, const char seperator)
+bool DBAdapter::selectData(const string &fields, const string &table, vector< list< string > >  &returnVal, int &errorCode)
 {
-	return selectData(fields, "1 = 1", table, returnVal, errorCode, seperator);
+	return selectData(fields, "1 = 1", table, returnVal, errorCode);
 }
 bool DBAdapter::deleteData(const string& condition, const string &table, int &errorCode) /*delete data from specific tables
 							Example usage:

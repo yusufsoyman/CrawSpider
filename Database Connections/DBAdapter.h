@@ -25,6 +25,7 @@
 #include <mysql/mysql.h>
 #include <string>
 #include <vector>
+#include <list>
 
 using namespace std;
 
@@ -44,28 +45,28 @@ public:
 	
 	bool connect (const char *ip, const int port, const char *user, const char *pass, int &errorCode); //connects database and resturns the result
 	bool disconnect (int &errorCode); //disconnect from database and return the result
-	bool selectDB(const std::string &dbName, int &errorCode); //selecting DB to connect
-	//bool execQuery(const std::string &sql, int &errorCode, char * reason); //execute a specific user written query, also returns a failure reason as set of chars
-	bool execQuery(const std::string &sql, int &errorCode); //overloaded version
+	bool selectDB(const string &dbName, int &errorCode); //selecting DB to connect
+	//bool execQuery(const string &sql, int &errorCode, char * reason); //execute a specific user written query, also returns a failure reason as set of chars
+	bool execQuery(const string &sql, int &errorCode); //overloaded version
 	bool execQuery(const void *sql, const int& querySize, int &errorCode); //overloaded version which accepts binary data
-	bool insertData(const std::string &fields, const std::string& values, const std::string &table, int &errorCode); /*inserts data into specific tables
+	bool insertData(const string &fields, const string& values, const string &table, int &errorCode); /*inserts data into specific tables
 								Example usage:
 								insertData("name, surname, age", "'john', 'smith', 52", "users", errorCodeVar);
 								*/
-	bool selectData(const std::string &fields, const std::string& condition, const std::string &table, vector<string> &returnVal, int &errorCode, const char seperator = ','); /*select data from specific tables
+	bool selectData(const string &fields, const string& condition, const string &table, vector< list< string > > &returnVal, int &errorCode); /*select data from specific tables
 								Example usage:
 								selecttData("name, surname, age", "name='john' or age < 52", "users", errorCodeVar);
 								*/
-	bool selectData(const std::string &fields, const std::string &table, vector<string> &returnVal, int &errorCode, const char seperator = ','); //overloaded version of select
-	bool deleteData(const std::string& condition, const std::string &table, int &errorCode); /*delete data from specific tables
+	bool selectData(const string &fields, const string &table, vector< list< string > >  &returnVal, int &errorCode); //overloaded version of select
+	bool deleteData(const string& condition, const string &table, int &errorCode); /*delete data from specific tables
 								Example usage:
 								deleteData("name=john and age >= 63", "users", errorCodeVar);
 								*/
-	bool updateData(const std::string &fields, const std::string& values, const std::string &condition, const std::string &table, int &errorCode); /*inserts data to specific tables
+	bool updateData(const string &fields, const string& values, const string &condition, const string &table, int &errorCode); /*inserts data to specific tables
 								Example usage
 								updatetData("name, surname, age", "'john', 'smith', 52", "name=john and age >= 63", "users", errorCodeVar);
 								*/
-	bool updateData(const std::string &fields, const std::string& values, const std::string &table, int &errorCode); // overloaded version
+	bool updateData(const string &fields, const string& values, const string &table, int &errorCode); // overloaded version
 private:
 	
 	int type; //this variable will hold the type of connection

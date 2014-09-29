@@ -27,11 +27,15 @@ int main(int argv, char **argc)
 	cout<<err<<endl;
 // 	dbConn.deleteData("id = 3", "test", err);
 // 	dbConn.updateData("name, surname", "'jane', 'doe'", "test", err);
-	vector<string> myresult;
+	vector< list< string > >  myresult;
 	dbConn.selectData("name, surname", "test", myresult, err);
 	for(int i = 0; i < myresult.size(); i++)
 	{
-		cout<<myresult[i]<<endl;
+		for(list <string>::iterator it = myresult[i].begin(); it != myresult[i].end(); it++)
+		{
+			cout<<*it<<' ';
+		}
+		cout<<endl;
 	}
 	dbConn.disconnect(err);
 	cout<<err<<endl;
