@@ -2,7 +2,7 @@
  * DBAdapter.h
  * Main Class to manage DB operations
  * Created by: Ozgur Pekcagliyan - 2014-09-25 09:28:43 PM EEST
- * Last edited by: Ozgur Pekcagliyan - 2014-09-28
+ * Last edited by: Ozgur Pekcagliyan - 2014-09-29
  * Notes: Ozgur Pekcagliyan - 2014-09-27
  * errorCode will be used to return specific error values back to user;
  * * Potential error codes are;
