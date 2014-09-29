@@ -3,15 +3,34 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <signal.h>
 #include "DBAdapter.h"
 #include "Logger.h"
 
 using namespace std;
 
+
+DBAdapter dbConn (DBAdapter::MYSQL);
+
+void sigHandler(int sig)
+{
+	char buffer[128];
+	sprintf(buffer, "%s - %d: SIGTERM caught", __FILE__, __LINE__);
+	Logger::printInfoLog(buffer);
+	Logger::finalize();
+	int dummy;
+	dbConn.disconnect(dummy);
+	signal(sig, SIG_DFL);
+	raise(sig);
+}
+
+
 int main(int argv, char **argc)
 {
+	signal(SIGTERM, sigHandler);
+	signal(SIGINT, sigHandler);
 	Logger::setLogConfig("./","test.log", Logger::DEBUG);
-	DBAdapter dbConn (DBAdapter::MYSQL);
+// 	DBAdapter dbConn (DBAdapter::MYSQL);
 	int err;
 	string ip = "127.0.0.1";
 	string user = "test";
@@ -26,7 +45,7 @@ int main(int argv, char **argc)
 	dbConn.insertData("name, surname", "'john', 'smith'", "test", err);
 	cout<<err<<endl;
 // 	dbConn.deleteData("id = 3", "test", err);
-// 	dbConn.updateData("name, surname", "'jane', 'doe'", "test", err);
+	dbConn.updateData("name, surname", "'jane', 'doe'", "test", err);
 	vector< list< string > >  myresult;
 	dbConn.selectData("name, surname", "test", myresult, err);
 	for(int i = 0; i < myresult.size(); i++)

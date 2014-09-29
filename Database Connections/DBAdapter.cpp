@@ -32,7 +32,8 @@
 using std::string;
 using std::vector;
 using std::list;
-// using std::strtok;
+using std::istringstream;
+
 
 #include "DBAdapter.h"
 #include "Logger.h"
@@ -364,7 +365,21 @@ bool DBAdapter::updateData(const string &fields, const string& values, const str
 							*/
 {
 	string sql = "update " + table + " set ";
-	char *fieldTok, *valueTok;
+	string tempFields(fields);
+	string tempValues(values);
+	string fieldTok, valueTok;
+	size_t fieldPos, valuePos;
+	while((fieldPos = tempFields.find(", ")) != string::npos && (valuePos = tempValues.find(", ")) != string::npos)
+	{
+		fieldTok = tempFields.substr(0, fieldPos);
+		valueTok = tempValues.substr(0, valuePos);
+		sql += fieldTok + " = " + valueTok + " , ";
+		tempValues.erase(0, valuePos + 2);
+		tempFields.erase(0, fieldPos + 2);
+	}
+	sql += tempFields + " = " + tempValues + ' ';
+	sql += " where " + condition;
+	/*char *fieldTok, *valueTok;
 	char *saveptr1, *saveptr2;
 	char *fieldsBuf = new char[fields.size() + 1];
 	char *valuesBuf = new char[values.size() + 1];
@@ -388,7 +403,7 @@ bool DBAdapter::updateData(const string &fields, const string& values, const str
 	}
 	sql += " where " + condition;
 	delete []fieldsBuf;
-	delete []valuesBuf;
+	delete []valuesBuf;*/
 	return execQuery(sql, errorCode);
 	/*if(type == MYSQL) //Mysql
 	{
