@@ -306,6 +306,7 @@ bool DBAdapter::selectData(const string &fields, const string& condition, const 
 {
 	string sql = "select " + fields + " from " + table + " where " + condition;
 	bool rValue = execQuery(static_cast<const void*>(sql.c_str()), sql.size(), errorCode);
+	returnVal.clear(); //vector should be cleared in order to return healthy results
 	//FIXME: Find a logical way to install fix this part
 	if(rValue == false)
 	{
