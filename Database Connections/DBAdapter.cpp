@@ -2,7 +2,7 @@
  * DBAdapter.cpp
  * Main Class to manage DB operations
  * Created by: Ozgur Pekcagliyan - 2014-09-26 09:34:38 PM EEST
- * Last edited by: Ozgur Pekcagliyan - 2014-09-29
+ * Last edited by: Ozgur Pekcagliyan - 2014-04-10
  * Notes:
  * errorCode will be used to return specific error values back to user;
  * * Potential error codes are;
@@ -18,6 +18,10 @@
  * * * 1: mysql (default value)
  * * * 2: oracle
  * * * rest of the codes will be added in time by developers
+ * In selectData function, data will be returned in a string vector, fields will be seperated by a user defined char
+ * selectData function appendFlag will decide wethrer returnVal will be cleared or results will be appended to the returnVal
+ * * 0: no append (default val)
+ * * 1: append
 */
 
 #include <string>
@@ -299,18 +303,20 @@ bool DBAdapter::insertData(const string &fields, const string& values, const str
 		return true;
 	}*/
 }
-bool DBAdapter::selectData(const string &fields, const string& condition, const string &table, vector< list< string > >  &returnVal, int &errorCode) /*select data from specific tables
+bool DBAdapter::selectData(const string &fields, const string& condition, const string &table, vector< list< string > >  &returnVal, int &errorCode, int appendFlag) /*select data from specific tables
 							Example usage:
 							selecttData("name, surname, age", "name='john' or age < 52", "users", errorCodeVar);
 							*/
 {
 	string sql = "select " + fields + " from " + table + " where " + condition;
 	bool rValue = execQuery(static_cast<const void*>(sql.c_str()), sql.size(), errorCode);
-	returnVal.clear(); //vector should be cleared in order to return healthy results
-	//FIXME: Find a logical way to install fix this part
 	if(rValue == false)
 	{
 		return false;
+	}
+	if(appendFlag == 1)
+	{
+		returnVal.clear(); //vector should be cleared in order to return healthy results
 	}
 	if(type == MYSQL) //Mysql
 	{
@@ -340,9 +346,9 @@ bool DBAdapter::selectData(const string &fields, const string& condition, const 
 		return true;
 	}
 }
-bool DBAdapter::selectData(const string &fields, const string &table, vector< list< string > >  &returnVal, int &errorCode)
+bool DBAdapter::selectData(const string &fields, const string &table, vector< list< string > >  &returnVal, int &errorCode, int appendFlag)
 {
-	return selectData(fields, "1 = 1", table, returnVal, errorCode);
+	return selectData(fields, "1 = 1", table, returnVal, errorCode, appendFlag);
 }
 bool DBAdapter::deleteData(const string& condition, const string &table, int &errorCode) /*delete data from specific tables
 							Example usage:

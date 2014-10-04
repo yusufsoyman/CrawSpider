@@ -3,7 +3,7 @@
  * Main Class to manage DB operations
  * Created by: Ozgur Pekcagliyan - 2014-09-25 09:28:43 PM EEST
  * Last edited by: Ozgur Pekcagliyan - 2014-09-29
- * Notes: Ozgur Pekcagliyan - 2014-09-27
+ * Notes: Ozgur Pekcagliyan - 2014-10-04
  * errorCode will be used to return specific error values back to user;
  * * Potential error codes are;
  * * * 0: success
@@ -19,7 +19,11 @@
  * * * 2: oracle
  * * * rest of the codes will be added in time by developers
  * In selectData function, data will be returned in a string vector, fields will be seperated by a user defined char
+ * selectData function appendFlag will decide wethrer returnVal will be cleared or results will be appended to the returnVal
+ * * 0: no append (default val)
+ * * 1: append
 */
+
 #ifndef DBADAPTER_H
 #define DBADAPTER_H
 #include <mysql/mysql.h>
@@ -53,11 +57,11 @@ public:
 								Example usage:
 								insertData("name, surname, age", "'john', 'smith', 52", "users", errorCodeVar);
 								*/
-	bool selectData(const string &fields, const string& condition, const string &table, vector< list< string > > &returnVal, int &errorCode); /*select data from specific tables
+	bool selectData(const string &fields, const string& condition, const string &table, vector< list< string > > &returnVal, int &errorCode, int appendFlag = 0); /*select data from specific tables
 								Example usage:
 								selecttData("name, surname, age", "name='john' or age < 52", "users", errorCodeVar);
 								*/
-	bool selectData(const string &fields, const string &table, vector< list< string > >  &returnVal, int &errorCode); //overloaded version of select
+	bool selectData(const string &fields, const string &table, vector< list< string > >  &returnVal, int &errorCode, int appendFlag = 0); //overloaded version of select
 	bool deleteData(const string& condition, const string &table, int &errorCode); /*delete data from specific tables
 								Example usage:
 								deleteData("name=john and age >= 63", "users", errorCodeVar);
