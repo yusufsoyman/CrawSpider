@@ -1,6 +1,6 @@
 /*
  * Logger.cpp
- * Main Class to manage DB operations
+ * Main Class to manage Logging operations
  * Created by: Ozgur Pekcagliyan - 2014-09-28 08:19:56 PM EEST
  * Last edited by: 
  * Notes:

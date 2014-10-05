@@ -11,28 +11,34 @@
 #define XMLPARSER_H
 
 #include <string>
+#include <vector>
 #include <map> //this might be used to build a tree
 
-template <class T>
-typedef struct XmlNode //FIXME: This can be a tree class an can be defined in another header file.
+namespace XmlParser
 {
-}XmlNode;
+	void vectorizeString (const string &str, vector<string> &returnVal, const char *seperator = "<> " ); // This will tokenize a string and fill a vector
+
+	template <class T>
+	typedef struct XmlNode //FIXME: This can be a tree class an can be defined in another header file.
+	{
+	}XmlNode;
 
 
-template <class T>
-class XmlParser
-{
-public:
-	XmlParser();
-	~XmlParser();
-	
-	bool loadXmlTree(const string &data); //This will generate a tree and load it into memeory
-	T getAttributeValue(const string &attr); //This will call one of the traverse functions and return attributes value.
-	const XmlNode & findNode (const string &date); // This is the real traverse function and every other function will call it
-	const XmlNode & findNode (const XmlNode &node);
-private:
-	map<T> tree;
-};
+	template <class T>
+	class XmlParser
+	{
+	public:
+		XmlParser();
+		~XmlParser();
+		
+		bool loadXmlTree(const string &data); //This will generate a tree and load it into memeory
+		T getAttributeValue(const string &attr); //This will call one of the traverse functions and return attributes value.
+		const XmlNode & findNode (const string &date); // This is the real traverse function and every other function will call it
+		const XmlNode & findNode (const XmlNode &node);
+	private:
+		map<T> tree;
+	};
 
+}
 
 #endif
