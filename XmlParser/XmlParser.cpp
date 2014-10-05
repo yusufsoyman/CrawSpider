@@ -28,6 +28,24 @@ void vectorizeString (const string &str, vector<string> &returnVal, const char *
 	while((pos = tempStr.find(seperator)) != string::npos)
 	{
 		tempToken = tempStr.substr(0, pos);
+		if(tempStr[pos] == '>')
+		{
+			if(tempStr[pos - 1] == '/') //<b/>
+			{
+			}
+			else if (tempToken.find(" ") != string::npos) //<a href="sf">sad</a>
+			{
+			}
+			else //<asd> asd </asd>
+			{
+				if(tempToken.find("/") != string::npos) // asd</asd>
+				{
+				}
+				else // <asd>
+				{
+				}
+			}
+		}
 		tempStr.erase(0, pos);
 		returnVal.push_back(tempToken);
 	}
@@ -44,7 +62,7 @@ XmlParser::~XmlParser()
 bool XmlParser::loadXmlTree(const string &data) //This will generate a tree and load it into memeory
 {
 	vector<string> tokenizedData;
-	vectorizeString(data, tokenizedData, "<
+	vectorizeString(data, tokenizedData, "<");
 }
 
 template <class T>
