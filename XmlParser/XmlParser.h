@@ -16,7 +16,6 @@
 
 namespace XmlParser
 {
-	void vectorizeString (const string &str, vector<string> &returnVal, const char *seperator = "<> " ); // This will tokenize a string and fill a vector
 
 	template <class T>
 	typedef struct XmlNode //FIXME: This can be a tree class an can be defined in another header file.
@@ -36,6 +35,7 @@ namespace XmlParser
 		const XmlNode & findNode (const string &date); // This is the real traverse function and every other function will call it
 		const XmlNode & findNode (const XmlNode &node);
 	private:
+		void vectorizeString (const string &str, vector<string> &returnVal); // This will tokenize a string and fill a vector
 		map<T> tree;
 	};
 
