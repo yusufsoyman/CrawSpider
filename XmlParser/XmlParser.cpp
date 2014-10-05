@@ -41,7 +41,7 @@ void XmlParser::vectorizeString (const string &str, vector<string> &returnVal) /
 			else if ((posSpace = tempToken.find(" ")) != string::npos) //<a href="sf">sad</a>
 			{
 				ignore = true;
-				string tmpDataTok = tempToken.substr(posSpace, pos); //this will get asd part
+				string tmpDataTok = tempToken.substr(posSpace, pos); //this will href="sad" part //FIXME: Need to modify this according to = and " chars
 				tempToken = tempToken.substr(1, posSpace);
 				returnVal.push_back(tempToken);
 				returnVal.push_back(tmpDataTok);
