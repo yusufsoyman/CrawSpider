@@ -110,7 +110,7 @@ void XmlParser::vectorizeString (const string &str, vector<string> &returnVal) /
 				}
 			}
 		}
-		tempStr.erase(0, pos); //erase read part
+		tempStr.erase(0, pos + 1); //erase read part
 	}
 	if(nodeStack.empty() == false)
 	{
@@ -209,11 +209,12 @@ void XmlParser::printTree(XmlNode *node)
 		{
 			cout<<node -> attributes[i] -> attrName<<" = "<<node -> attributes[i] -> attrVal<<endl;
 		}
-		cout<<"-------------------"<<endl;
+		cout<<"Node Value: "<<node -> nodeVal<<endl<<"-------------------"<<endl;
 		for(i = 0; i < subNodesize; ++i)
 		{
 			printTree(node -> subNodes[i]);
 		}
+		
 	}
 	else
 	{
