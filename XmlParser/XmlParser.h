@@ -15,20 +15,20 @@
 // #include <map> //this might be used to build a tree
 
 
-namespace XmlParser
+namespace XmlSpace
 {
 	typedef struct XmlAttribute
 	{
-		string attrName;
-		string attrVal;
+		std::string attrName;
+		std::string attrVal;
 	}XmlAttribute;
 
 	typedef struct XmlNode
 	{
-		string nodeName;
-		vector <XmlAttribute *> attributes;
-		string nodeVal;
-		vector <struct XmlNode *> subNodes;
+		std::string nodeName;
+		std::vector <XmlAttribute *> attributes;
+		std::string nodeVal;
+		std::vector <struct XmlNode *> subNodes;
 	}XmlNode;
 
 // 	template <class T>
@@ -38,14 +38,15 @@ namespace XmlParser
 		XmlParser();
 		~XmlParser();
 		
-		bool loadXmlTree(const string &data); //This will generate a tree and load it into memeory.
-		const string getAttributeValue(const string &attr); //This will call one of the traverse functions and return attributes value.
+		bool loadXmlTree(const std::string &data); //This will generate a tree and load it into memeory.
+		const std::string getAttributeValue(const std::string &attr); //This will call one of the traverse functions and return attributes value.
+		void printTree(XmlNode *node = NULL); //This will print the tree // TODO:This will be romeved in working copy
 // 		T getAttributeValue(const string &attr); //This will call one of the traverse functions and return attributes value.
 // 		const XmlNode & findNode (const string &date); // This is the real traverse function and every other function will call it.
 // 		const XmlNode & findNode (const XmlNode &node);
 	private:
-		XmlNode * createNode (const string &nodeName, const string nodeVal = ""); // This function will create and return a node back to caller.
-		void vectorizeString (const string &str, vector<string> &returnVal); // This will tokenize a string and fill a vector.
+		XmlNode * createNode (const std::string &nodeName, const std::string nodeVal = ""); // This function will create and return a node back to caller.
+		void vectorizeString (const std::string &str, std::vector<std::string> &returnVal); // This will tokenize a string and fill a vector.
 // 		map<T> tree;
 		XmlNode *head;
 	};

@@ -10,12 +10,16 @@
 #include <string>
 // #include <map>
 #include <stack>
-#include "XmlParser.h>
+#include <iostream> // TODO:This will be romeved in working copy
+#include "XmlParser.h"
 #include "Logger.h"
 
+using std::cout;
+using std::endl;
 using std::string;
 using std::stack;
-using namespace XmlParser;
+using std::vector;
+using namespace XmlSpace;
 
 
 void XmlParser::vectorizeString (const string &str, vector<string> &returnVal) // This will tokenize a string and fill a vector
@@ -32,7 +36,7 @@ void XmlParser::vectorizeString (const string &str, vector<string> &returnVal) /
 	{
 		tempToken = tempStr.substr(0, pos);
 		
-		if(tempStr[pos - 1] == '/') //<b/>
+		if(tempStr[pos - 1] == '/') //<br/>
 		{
 			//FIXME: what if it has attributes?
 			string nodeName = tempToken.substr(0, tempToken.size() - 1);
@@ -79,7 +83,7 @@ void XmlParser::vectorizeString (const string &str, vector<string> &returnVal) /
 				temp -> attributes.push_back(tempAttr);
 			}
 		}
-		else //<asd> asd </asd>
+		else //<asd> qwe </asd>
 		{
 			if(tempToken.find("/") != string::npos) // asd</asd>
 			{
@@ -174,7 +178,7 @@ void XmlParser::vectorizeString (const string &str, vector<string> &returnVal) /
 }
 
 
-XmlNode * XmlParser::createNode (const string &nodeName, const string nodeVal = "")
+XmlNode * XmlParser::createNode (const string &nodeName, const string nodeVal)
 {
 	if ( head == NULL) //if head is null then, we are just starting a new tree
 	{
@@ -189,6 +193,34 @@ XmlNode * XmlParser::createNode (const string &nodeName, const string nodeVal = 
 	return newNode;
 }
 
+void XmlParser::printTree(XmlNode *node)
+{
+	if(head != NULL)
+	{
+		if(node == NULL)
+		{
+			node = head;
+		}
+		int attrSize = node -> attributes.size();
+		int subNodesize = node -> subNodes.size();
+		int i;
+		cout<<"Node name: "<<node -> nodeName<<endl;
+		for( i = 0; i < attrSize; ++i)
+		{
+			cout<<node -> attributes[i] -> attrName<<" = "<<node -> attributes[i] -> attrVal<<endl;
+		}
+		cout<<"-------------------"<<endl;
+		for(i = 0; i < subNodesize; ++i)
+		{
+			printTree(node -> subNodes[i]);
+		}
+	}
+	else
+	{
+		cout<<"XML Not loaded"<<endl;
+	}
+}
+
 XmlParser::XmlParser()
 {
 	head = NULL;
@@ -201,11 +233,12 @@ XmlParser::~XmlParser()
 bool XmlParser::loadXmlTree(const string &data) //This will generate a tree and load it into memeory
 {
 	vector<string> tokenizedData;
-	vectorizeString(data, tokenizedData, "<");
+	vectorizeString(data, tokenizedData);
+	return true;
 }
 
 // template <class T>
-string XmlParser::getAttributeValue(const string &attr) //This will call one of the traverse functions and return attributes value.
+const string XmlParser::getAttributeValue(const string &attr) //This will call one of the traverse functions and return attributes value.
 {
 }
 
