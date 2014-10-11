@@ -43,14 +43,10 @@ void XmlParser::vectorizeString (const string &str, vector<string> &returnVal) /
 			XmlNode *temp = createNode(nodeName);
 			nodeStack.top() -> subNodes.push_back(temp);
 		}
-		else if ((posSpace = tempToken.find(" ")) != string::npos && tempToken.find("/") == string::npos) //<a href="sf">
+		else if ((posSpace = tempToken.find(" ")) != string::npos && tempToken.find("</") == string::npos) //<a href="sf">
 		{
 			string nodeName = tempToken.substr(1, posSpace); //0th element should be <
 			size_t posTemp;
-			while((posTemp = tempToken.find("\"")) != string::npos)
-			{
-				tempToken.erase(posTemp); //delete if any " in str
-			}
 			XmlNode *temp = createNode(nodeName);
 			if(temp == NULL)
 			{
@@ -62,21 +58,35 @@ void XmlParser::vectorizeString (const string &str, vector<string> &returnVal) /
 				nodeStack.top() -> subNodes.push_back(temp);
 				nodeStack.push(temp);
 			}
-			tempToken.erase(0, posSpace); //remove processed part
+			tempToken.erase(0, posSpace + 1);
 			string attrName, attrValue;
+			bool hasQuote;
 			while((posTemp = tempToken.find("=")) != string::npos)
 			{
-				size_t posComa;
-				attrName = tempToken.substr(0, posTemp);
-				if((posComa = tempToken.find(",")) != string::npos)
+				hasQuote = false;
+				attrName = tempToken.substr(0, posTemp); //range between space and = sign like //<a href=
+				if(tempToken[posTemp + 1] == '\"')
 				{
-					attrValue = tempToken.substr(posTemp, posComa);
+					hasQuote = true;
+					++posTemp; //Move to other side of quote
+					posSpace = tempToken.substr(posTemp + 1, string::npos).find("\"") + posTemp + 1; // FIXME:So expensive
 				}
 				else
 				{
-					attrValue = tempToken.substr(posTemp, tempToken.size());
+					if((posSpace = tempToken.find(" ")) == string::npos)
+					{
+						posSpace = tempToken.size();
+					}
 				}
-				//Create an XmlAttribute
+				attrValue = tempToken.substr(posTemp + 1, posSpace - posTemp - 1);
+				if(hasQuote)
+				{
+					tempToken.erase(0, posSpace + 2);
+				}
+				else
+				{
+					tempToken.erase(0, posSpace + 1);
+				}
 				XmlAttribute *tempAttr = new XmlAttribute();
 				tempAttr -> attrName = attrName;
 				tempAttr -> attrVal = attrValue;
@@ -116,65 +126,7 @@ void XmlParser::vectorizeString (const string &str, vector<string> &returnVal) /
 	{
 		//Oh no we have an invalid XML and couldn't complete XML
 	}
-// 	string tempStr(str);
-// 	string tempToken;
-// 	size_t pos, posSpace;
-// 	if(!returnVal.empty())
-// 	{
-// 		returnVal.clear();
-// 	}
-// 	bool ignore = false;
-// 	while((pos = tempStr.find(">")) != string::npos)
-// 	{
-// 		/*if(!ignore)
-// 		{*/
-// 			tempToken = tempStr.substr(0, pos);
-// 			//if(tempStr[pos] == '>')
-// 			//{
-// 			if(tempStr[pos - 1] == '/') //<b/>
-// 			{
-// 				//Don't do anything yet. We will consider it according to implementation of other functionalities
-// 				//tempToken = tempToken.substr(0, pos - 1);
-// 			}
-// 			else if ((posSpace = tempToken.find(" ")) != string::npos) //<a href="sf">sad</a>
-// 			{
-// 				ignore = true;
-// 				string tmpDataTok = tempToken.substr(posSpace, pos); //this will href="sad" part //FIXME: Need to modify this according to = and " chars
-// 				tempToken = tempToken.substr(1, posSpace);
-// 				returnVal.push_back(tempToken);
-// 				returnVal.push_back(tmpDataTok);
-// 			}
-// 			else //<asd> asd </asd>
-// 			{
-// 				if(tempToken.find("/") != string::npos) // asd</asd>
-// 				{
-// 					size_t posEndStart = tempToken.find("<");
-// 					if(!ignore)
-// 					{
-// 						string tmpDataTok = tempToken.substr(1, posEndStart); //this will get asd part
-// 					}
-// 					ignore = false; // make sure ignore is always false
-// 					returnVal.push_back(tmpDataTok);
-// 					tempToken = tempToken.substr(posEndStart + 1, string::npos); //this will get /asd part
-// 				}
-// 				else // <asd>
-// 				{
-// 					tempToken = tempToken.substr(1, string::npos); //0th element should be <
-// 				}
-// 			}
-// 			//}
-// 			tempStr.erase(0, pos);
-// 			if(!ignore)
-// 			{
-// 				returnVal.push_back(tempToken);
-// 			}
-// 		/*}
-// 		else
-// 		{
-// 			tempStr.erase(0, pos);
-// 			ignore = false;
-// 		}*/
-// 	}
+
 }
 
 
